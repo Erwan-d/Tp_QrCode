@@ -4,11 +4,17 @@ import javax.swing.*;
 import java.awt.*;
 
 public class VueQRCode extends JFrame {
+    // --- Boutons de sauvegarde/chargement ---
+    public JButton saveButton;
+    public JButton loadButton;
+
+    // --- Éléments principaux ---
     public JTextField inputField;
     public JTextField qrContentField;
     public JButton generateButton;
     public JLabel statusLabel;
 
+    // --- Personnalisation du texte ---
     public JButton chooseFontButton;
     public JLabel fontPathLabel;
     public JComboBox<Integer> fontSizeCombo;
@@ -17,6 +23,7 @@ public class VueQRCode extends JFrame {
     public JCheckBox includeQrCheckBox;
     public JLabel previewLabel;
 
+    // --- Image ---
     public JButton chooseImageButton;
     public JLabel imagePathLabel;
     public JComboBox<String> imagePositionCombo;
@@ -28,21 +35,22 @@ public class VueQRCode extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         getContentPane().setLayout(new BorderLayout(10, 10));
 
+        // --- Zone texte et contenu QR ---
         JPanel topPanel = new JPanel(new GridLayout(2, 1, 5, 5));
-        
         JPanel textPanel = new JPanel(new BorderLayout(5, 5));
         textPanel.add(new JLabel("Texte à afficher : "), BorderLayout.WEST);
         inputField = new JTextField(30);
         textPanel.add(inputField, BorderLayout.CENTER);
-        
+
         JPanel qrPanel = new JPanel(new BorderLayout(5, 5));
         qrPanel.add(new JLabel("Contenu QR code : "), BorderLayout.WEST);
         qrContentField = new JTextField(30);
         qrPanel.add(qrContentField, BorderLayout.CENTER);
-        
+
         topPanel.add(textPanel);
         topPanel.add(qrPanel);
 
+        // --- Options principales ---
         JPanel optionsPanel = new JPanel();
         optionsPanel.setLayout(new GridLayout(8, 2, 5, 5));
 
@@ -97,7 +105,17 @@ public class VueQRCode extends JFrame {
         imageHeightCombo.setSelectedItem(150);
         optionsPanel.add(imageHeightCombo);
 
+        
         JPanel bottomPanel = new JPanel(new BorderLayout(5, 5));
+
+        JPanel saveLoadPanel = new JPanel(new FlowLayout());
+        saveButton = new JButton("💾 Sauvegarder projet");
+        loadButton = new JButton("📂 Charger projet");
+        saveLoadPanel.add(saveButton);
+        saveLoadPanel.add(loadButton);
+
+        bottomPanel.add(saveLoadPanel, BorderLayout.NORTH);
+
         generateButton = new JButton("Générer QR Code PDF");
         bottomPanel.add(generateButton, BorderLayout.CENTER);
 
@@ -105,6 +123,7 @@ public class VueQRCode extends JFrame {
         statusLabel.setForeground(Color.BLUE);
         bottomPanel.add(statusLabel, BorderLayout.SOUTH);
 
+        
         getContentPane().add(topPanel, BorderLayout.NORTH);
         getContentPane().add(optionsPanel, BorderLayout.CENTER);
         getContentPane().add(bottomPanel, BorderLayout.SOUTH);
@@ -114,4 +133,5 @@ public class VueQRCode extends JFrame {
         setVisible(true);
     }
 }
+
 

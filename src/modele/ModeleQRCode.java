@@ -14,19 +14,21 @@ import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.*;
 
+
 public class ModeleQRCode {
 
+    
     public void genererQRCodePDF(String texteAffichage, String contenuQR,
                                  String fontPath, int fontSize, Color color,
                                  boolean includeQr, String imagePath,
-                                 int imageWidth, int imageHeight, 
+                                 int imageWidth, int imageHeight,
                                  String imagePosition, String dest) throws Exception {
 
         String dataQR = (contenuQR != null && !contenuQR.trim().isEmpty()) ? contenuQR : texteAffichage;
 
         Font customFont;
         BaseColor textColor = new BaseColor(color.getRed(), color.getGreen(), color.getBlue());
-        
+
         if (fontPath != null && !fontPath.trim().isEmpty()) {
             try {
                 File fontFile = new File(fontPath);
@@ -58,7 +60,8 @@ public class ModeleQRCode {
             }
         }
 
-        if (pdfImage != null && "Haut".equals(imagePosition)) {
+        // --- Placement image selon position ---
+        if (pdfImage != null && "Haut".equalsIgnoreCase(imagePosition)) {
             document.add(pdfImage);
             document.add(Chunk.NEWLINE);
         }
@@ -66,6 +69,7 @@ public class ModeleQRCode {
         Paragraph p = new Paragraph("Informations : " + texteAffichage, customFont);
         document.add(p);
 
+        // --- QR Code ---
         if (includeQr) {
             document.add(Chunk.NEWLINE);
             BufferedImage qrImage = generateQrBufferedImage(dataQR, 200, 200);
@@ -78,12 +82,13 @@ public class ModeleQRCode {
             document.add(qr);
         }
 
-        if (pdfImage != null && "Après texte".equals(imagePosition)) {
+        
+        if (pdfImage != null && "Après texte".equalsIgnoreCase(imagePosition)) {
             document.add(Chunk.NEWLINE);
             document.add(pdfImage);
         }
 
-        if (pdfImage != null && "Bas".equals(imagePosition)) {
+        if (pdfImage != null && "Bas".equalsIgnoreCase(imagePosition)) {
             document.add(Chunk.NEWLINE);
             document.add(pdfImage);
         }
@@ -91,11 +96,27 @@ public class ModeleQRCode {
         document.close();
     }
 
+ 
     private BufferedImage generateQrBufferedImage(String data, int width, int height) throws WriterException {
         QRCodeWriter qrCodeWriter = new QRCodeWriter();
         BitMatrix bitMatrix = qrCodeWriter.encode(data, BarcodeFormat.QR_CODE, width, height);
         return MatrixToImageWriter.toBufferedImage(bitMatrix);
     }
+
+
+    public void sauvegarderProjet(Dataprojet data, String filePath) throws IOException {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(filePath))) {
+            oos.writeObject(data);
+        }
+    }
+
+    public Dataprojet chargerProjet(String filePath) throws IOException, ClassNotFoundException {
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filePath))) {
+            return (Dataprojet) ois.readObject();
+        }
+    }
 }
+
+
 
 
